@@ -187,6 +187,7 @@ def release_of_acid_residue(reagent): ##выделяет из формулы к�
      else:
           return("Error")
 
+
 def release_of_metal(reagent): ##выделяет из формулы металл
      metal = ''
      i=0
@@ -196,28 +197,6 @@ def release_of_metal(reagent): ##выделяет из формулы метал
           i+=1
      return metal
 
-def oxidation(equation, f = devision_into_parts): ##окисление (металл и неметалл)
-    reagents = f(equation)
-    elem0 = devision_into_elements(reagents[0])
-    elem1 = devision_into_elements(reagents[1])
-    str_elem0 = ', '.join(elem0)
-    str_elem1 = ', '.join(elem1)
-    if (str_elem0 in Me or str_elem1 in Me or str_elem0 in Ne_Me or str_elem1 in Ne_Me) and (reagents[0]=='O2' or reagents[1] =='O2'):
-        if reagents[0] == 'O2':
-            el = reagents[1]
-            reagents[1] = reagents[0]
-            reagents[0] = el
-        if reagents[0] != 'N2' and reagents[0] != 'F2':
-            nod = gcd(abs(int(oxidation_states.get(str_elem0))),abs(int(oxidation_states.get(str_elem1))))
-            reaction = equation + '-->' + str_elem0+str(int(abs(int(oxidation_states.get(str_elem1))/nod))) + str_elem1  + str(int(abs(int(oxidation_states.get(str_elem0)))/nod))
-            return balance_equation(reaction), 'горение'
-        if reagents[0] == 'N2':
-            reaction = equation + '-->' + 'NO'
-            return balance_equation(reaction), 'горение'
-        if reagents[0] == 'F2':
-            reaction = equation + '-->' + 'OF2'
-            return balance_equation(reaction), 'горение'
-
 def combustion(equation, f = devision_into_parts): ##горение сложных элементов
     reagents = f(equation)
     if reagents[0] == 'O2' or reagents[1] == 'O2':
@@ -225,7 +204,8 @@ def combustion(equation, f = devision_into_parts): ##горение сложны
             elem = reagents[1]
             reagents[1] = reagents[0]
             reagents[0] = elem
-        if reagents[0] not in exceptions:
+        elem0 = devision_into_elements(reagents[0])
+        if reagents[0] not in exceptions and elem0[1] != 'O':
             if len(devision_into_elements(reagents[0]))==2:
                 elems = devision_into_elements(reagents[0])
                 elem_in_0 = devision_into_elements(reagents[0])
@@ -262,31 +242,20 @@ def combustion(equation, f = devision_into_parts): ##горение сложны
         elif reagents[0] == 'NH3' or reagents[1] == 'NH3':
             reaction =  reagents[0] + ' + ' + reagents[1] + '-->' + 'NO' + ' + ' +  'H2O'
             return balance_equation(reaction), 'горение'
-                                                                                                                                                                                                                                                             
-def neutralization(equation, f = devision_into_parts): ##нейтрализация
+        else:
+            return ''
+    return ''
+
+def neutralization(equation, f=devision_into_parts):  ##нейтрализация
     reagents = f(equation)
     if ('OH' in reagents[0] or 'OH' in reagents[1]) and ('H' in reagents[0] or 'H' in reagents[1]):
-        if 'OH' in reagents[1]:
-            base = reagents[1]
-            reagents[1] = reagents[0]
-            reagents[0] = base
-        me = release_of_metal(reagents[0])
-        a_ox = release_of_acid_residue(reagents[1])
-        nod = gcd(abs(int(oxidation_states.get(me))),abs(int(acid_oxides_states.get(a_ox))))
-        product = me + str(int(int(acid_oxides_states.get(a_ox))/nod)) + '(' + a_ox + ')' + str(int(int(oxidation_states.get(me))/nod))
-        reaction =  equation + '-->' + product + ' + ' + 'H2O'
-        if me+'1' in product and  ')1' in product:
-            product1 = product.replace('1', '').replace(')', '').replace('(', '')
-            return balance_equation(reaction.replace(product, product1)), 'обмен (нейтрализация)'
-        if int(acid_oxides_states.get(a_ox))!=1 and ')1' in product:
-            product2 = product.replace('(', '').replace(')1', '')
-            return balance_equation(reaction.replace(product, product2)), 'обмен (нейтрализация)'
-        if me+'1' in product:
-            product3 = product.replace('1', '')
-            return balance_equation(reaction.replace(product, product3)), 'обмен (нейтрализация)'
+        if 'OH' in reagents[0]:
+            reaction = reagents[0] + ' + ' + reagents[1] + ' --> ' + reagents[0].replace('OH', reagents[1][1:]) + ' + ' + 'H2O'
+            return balance_equation(reaction)
         else:
-            return balance_equation(reaction), 'обмен (нейтрализация)'
-
+            reaction = reagents[0] + ' + ' + reagents[1] + ' --> ' + reagents[1].replace('OH', reagents[1][1:]) + ' + ' + 'H2O'
+            return balance_equation(reaction), 'обмен'
+    return ''
 def substitution(equation, f = devision_into_parts): ##замещение (металл +кислота, металл + соль, галоген + соль c галогеном)
     reagents = f(equation)
     if reagents[1] in Me or reagents[1] in Ne_Me:
@@ -303,9 +272,9 @@ def substitution(equation, f = devision_into_parts): ##замещение (ме�
             if reagents[0]+str(int(int(acid_oxides_states.get(ac_ox))/nod))+'(' + ac_ox + ')' + str(int(int(oxidation_states.get(reagents[0]))/nod)) not in non_existent:
                 return balance_equation(reaction), 'замещение'
             else:
-                return 'Реакция не идет'
+                return ''
         else:
-            return 'Реакция не идет'
+            return ''
     if (reagents[0] in Me or reagents[1] in Me) and (release_of_metal(reagents[1])):
         me_new = release_of_metal(reagents[1])
         if (metal_activity_series.index(reagents[0])>metal_activity_series.index(me_new)):
@@ -313,15 +282,14 @@ def substitution(equation, f = devision_into_parts): ##замещение (ме�
             reaction = equation + '-->' + (reagents[0]+str(int(int(acid_oxides_states.get(ac_ox))/nod)) + ac_ox  + str(int(int(oxidation_states.get(reagents[0]))/nod))).replace('1', '') + ' + ' +  me_new
             return balance_equation(reaction), 'замещение'
         else:
-            return 'Реакция не идет'
-
+            return ''
     if (elem0[0] in halogene_strength) and (elem1[1] in halogene_strength):
         if halogene_strength.index(elem0[0]) > halogene_strength.index(elem1[1]):
             reaction = equation + '-->' + reagents[0].replace(elem0[0], elem1[1])+ ' + ' + reagents[1].replace(elem1[1], elem0[0])
             return balance_equation(reaction), 'замещение'
         else:
-            return 'Реакция не идет'
-
+            return ''
+    return ''
 def compound(equation, f = devision_into_parts): ##(соединение: 1+1, Ме + вода, кисотный/основный оксид + вода)
     reagents = f(equation)
     elem0 = devision_into_elements(reagents[0])
@@ -329,16 +297,32 @@ def compound(equation, f = devision_into_parts): ##(соединение: 1+1, �
     str_elem0 = ', '.join(elem0)
     str_elem1 = ', '.join(elem1)
     if (str_elem0 in Me) and (str_elem1 in Me) and (len(elem0) == 1 and len(elem1) ==1):
-        return 'Реакция не идет'
+        return ''
     if 'H2' in equation and ('Si' in equation or 'B' in equation or 'P' in equation):
-        return 'Реакция не идет'
+        return ''
     if (str_elem0 in Me or str_elem0 in Ne_Me) and (str_elem1 in Me or str_elem1 in Ne_Me) and (len(elem0) == 1 and len(elem1) ==1):
-        nod = gcd(abs(int(oxidation_states.get(elem0[0]))), abs(int(oxidation_states.get(elem1[0]))))
-        k1 = int(abs(int(oxidation_states.get(elem0[0]))))
-        k2 = int(abs(int(oxidation_states.get(elem1[0]))))
-        product = (elem0[0] + str(int(k2/nod)) + elem1[0] + str(int(k1/nod))).replace('1', '')
-        reaction = equation + ' --> '  + product
-        return balance_equation(reaction), 'соединение'
+        if (str_elem0 == 'S' or str_elem1 == 'S') and (str_elem0 in Me or str_elem1 in Me):
+            if str_elem0 == 'S':
+                me = reagents[1]
+                reagents[1] = reagents[0]
+                reagents[0] = me
+            nod = gcd(2, abs(int(oxidation_states.get(elem0[0]))))
+            k = int(abs(int(oxidation_states.get(elem0[0]))))
+            reaction = equation + '-->' + elem0[0] + str(int(2/nod)) + 'S' + str(int(k/nod))
+            return  balance_equation(reaction), 'соединение'
+        if reagents[0] == 'N2':
+            reaction = equation + '-->' + 'NO'
+            return balance_equation(reaction), 'соединение'
+        if reagents[0] == 'F2':
+            reaction = equation + '-->' + 'OF2'
+            return balance_equation(reaction), 'соединение'
+        else:
+            nod = gcd(abs(int(oxidation_states.get(elem0[0]))), abs(int(oxidation_states.get(elem1[0]))))
+            k1 = int(abs(int(oxidation_states.get(elem0[0]))))
+            k2 = int(abs(int(oxidation_states.get(elem1[0]))))
+            product = (elem0[0] + str(int(k2/nod)) + elem1[0] + str(int(k1/nod))).replace('1', '')
+            reaction = equation + ' --> '  + product
+            return balance_equation(reaction), 'соединение'
     if (reagents[1] == 'H2O' or reagents[0] == 'H2O'):
         if reagents[0] == 'H2O':
                 water = reagents[1]
@@ -355,42 +339,57 @@ def compound(equation, f = devision_into_parts): ##(соединение: 1+1, �
             product = reagents[0]+ '(OH)' + str(int(oxidation_states.get(reagents[0])))
             reaction = equation + '-->' + product + ' + ' +'H2'
             if ')1' in product:
-                product1 = product.replace('(', '').replace(')1', '')
-            if product not in sediment or product1 not in sediment:
-                return balance_equation(reaction.replace(product, product1)), 'соединение'
+                product = product.replace('(', '').replace(')1', '')
+                reaction = reaction = equation + '-->' + product + ' + ' +'H2'
+            if product not in sediment:
+                return balance_equation(reaction), 'соединение'
             else:
-                return 'Реакция не идет'
-
+                return ''
+    return ''
+print(compound('K + H2O'))
 def exchange(equation, f = devision_into_parts): ##обмен: соль + соль
     reagents = f(equation)
     if reagents[0] not in sediment and reagents[1] not in sediment:
-        elem0 = devision_into_elements(reagents[0])
-        elem1 = devision_into_elements(reagents[1])
         a_ox0 = release_of_acid_residue(reagents[0])
         a_ox1 = release_of_acid_residue(reagents[1])
         me0 = release_of_metal(reagents[0])
         me1 = release_of_metal(reagents[1])
-        nod0 = gcd(abs(int(oxidation_states.get(elem0[0]))),abs(int(acid_oxides_states.get(a_ox1))))
-        nod1 = gcd(abs(int(oxidation_states.get(elem1[0]))),abs(int(acid_oxides_states.get(a_ox0))))
-        product1 = elem0[0] + str(int(int(acid_oxides_states.get(a_ox1))/nod0)) + '(' + a_ox1 + ')' + str(int(int(oxidation_states.get(elem0[0]))/nod0))
-        product2 = elem1[0] + str(int(int(acid_oxides_states.get(a_ox0))/nod1)) +'(' +  a_ox0 + ')' + str(int(int(oxidation_states.get(elem1[0]))/nod1))
+        nod0 = gcd(abs(int(oxidation_states.get(me0))),abs(int(acid_oxides_states.get(a_ox1))))
+        nod1 = gcd(abs(int(oxidation_states.get(me1))),abs(int(acid_oxides_states.get(a_ox0))))
+        product1 = me0 + str(int(int(acid_oxides_states.get(a_ox1))/nod0)) + '(' + a_ox1 + ')' + str(int(int(oxidation_states.get(me0))/nod0))
+        product2 = me1 + str(int(int(acid_oxides_states.get(a_ox0))/nod1)) +'(' +  a_ox0 + ')' + str(int(int(oxidation_states.get(me1))/nod1))
         if (me0+'1(' in product1) and  (')1' in product1):
             product1 = product1.replace('1(', '').replace(')1', '')
         elif me0+'1' in product1:
             product1 = product1.replace('1', '')
         elif int(acid_oxides_states.get(a_ox1))!=1 and ')1' in product1:
             product1 = product1.replace('(', '').replace(')1', '')
-        if me1+'1' in product2:
-            product2 = product2.replace('1', '')
-        elif me1+'1(' in product2 and  ')1' in product2:
+        if me1+'1(' in product2 and  ')1' in product2:
             product2 = product2.replace('1(', '').replace(')1', '')
+        elif me1+'1' in product2:
+            product2 = product2.replace('1', '')
         elif int(acid_oxides_states.get(a_ox0))!=1 and ')1' in product2:
             product2 = product2.replace('(', '').replace(')1', '')
         if (product1 in sediment) or (product2 in sediment):
             reaction = equation + '-->' + product1 + ' + ' + product2
             return balance_equation(reaction), 'обмен'
         else:
-            return 'Реакция не идет'
-            
-            
-            
+            return ''
+    else:
+        return ''
+def hydrolisys(equation, f = devision_into_parts): ##гидролиз
+    reagents = f(equation)
+    if reagents[0] == 'H2O' or reagents[1]=='H2O':
+        if reagents[0] == 'H2O':
+            water = reagents[1]
+            reagents[1] = reagents[0]
+            reagents[0] = water
+        me = release_of_metal(reagents[0])
+        ac_res = release_of_acid_residue(reagents[0])
+        if (me in strong_ion and ac_res  in weak_ion) or (me in weak_ion and ac_res in strong_ion):
+            reaction = equation + '-->' + reagents[0].replace(ac_res, 'OH') + ' + ' + ox_acid.get(ac_res)
+            return balance_equation(reaction)
+        else:
+            return ''
+    else:
+        return ''
