@@ -17,3 +17,6 @@ base_ox = {'Li2O': 'LiOH', 'Na2O': 'NaOH', 'K2O':'KOH', 'Rb2O':'RbOH', 'Cs2O': '
 acids_ox = {'SO2':'H2SO3', 'SO3':'H2SO4', 'CO2':'H2CO3', 'SiO2':'H2SiO3', 'P2O5':'H3PO4', 'N2O5':'HNO3'}
 b_oxide = ['Li2O', 'Na2O', 'K2O', 'Rb2O', 'Cs2O', 'CaO', 'BaO', 'SrO', 'RaO']
 ac_oxide = ['SO3', 'P2O5', 'N2O5']
+weak_ion = ['Mg', 'Sr', 'Al', 'Cr', 'Fe', 'Mn', 'Zn', 'Pb', 'Sn', 'Cu', 'F', 'S', 'CO3', 'SiO3', 'F', 'NO2', 'SO3', 'NH4']
+strong_ion = ['Na', 'Li', 'K', 'Ba', 'Ca', 'Cl', 'Br', 'I', 'SO4', 'NO3', 'PO4']
+ox_acid = {'F': 'HF', 'Cl':'HCl', 'Br':'HBr', 'I':'HI', 'S':'H2S', 'SO3':'H2SO3', 'SO4':'H2SO4', 'NO3':'HNO3', 'NO2':'HNO2', 'PO4':'H3PO4', 'CO3':'H2CO3', 'SiO3':'H2SiO3'}
