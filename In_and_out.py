@@ -16,10 +16,12 @@ window.geometry('900x400+100+100')
 
 
 def input_into_entry(symbol):
+    """returns 'abcd' instead of 'dcba'"""
     entry.insert(END, symbol)
 
 
 def clear():
+    """returns empty line"""
     entry.delete(0, END)
 
 
