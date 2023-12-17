@@ -15,7 +15,7 @@ def clear(): # Стирание всей строки
     entry.delete(0, END)
 
 
-def count_result(): # Вводится 2 элмента, выводится сумма и ответ
+def count_result(): # Вводится 2 элемента, выводится сумма и ответ
     """returns A + B (after reaction)
 
     :param A: element_1
@@ -242,6 +242,7 @@ btn66.place(x = 650, y = 350, width = 50, height = 50)
 btn67 = Button(window, bg = 'white', fg = 'red', text = ')',
               command = lambda: input_into_entry(')'))
 btn67.place(x = 700, y = 350, width = 50, height = 50)
+
 
 
 
