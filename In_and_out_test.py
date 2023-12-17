@@ -85,26 +85,26 @@ class FunctionReactions(unittest.TestCase):
             balance_equation('KOH + H2SO4-->K2SO4 + H2O'),
             '2KOH + 1H2SO4-->1K2SO4 + 2H2O')
 
-    def test_devision_into_parts_empty(self):
-        self.assertEqual(devision_into_parts(''), [''])
+    def test_division_into_parts_empty(self):
+        self.assertEqual(division_into_parts(''), [''])
 
-    def test_devision_into_parts_K_H2O_1(self):
-        self.assertEqual(devision_into_parts('K + H2O'), ['K', 'H2O'])
+    def test_division_into_parts_K_H2O_1(self):
+        self.assertEqual(division_into_parts('K + H2O'), ['K', 'H2O'])
 
-    def test_devision_into_parts_K_H2O_2(self):
-        self.assertEqual(devision_into_parts('K+ H2O'), ['K', 'H2O'])
+    def test_division_into_parts_K_H2O_2(self):
+        self.assertEqual(division_into_parts('K+ H2O'), ['K', 'H2O'])
 
-    def test_devision_into_elements_empty(self):
-        self.assertEqual(devision_into_elements(''), [])
+    def test_division_into_elements_empty(self):
+        self.assertEqual(division_into_elements(''), [])
 
-    def test_devision_into_elements_H2SO4(self):
-        self.assertEqual(devision_into_elements('H2SO4'), ['H', 'S', 'O'])
+    def test_division_into_elements_H2SO4(self):
+        self.assertEqual(division_into_elements('H2SO4'), ['H', 'S', 'O'])
 
-    def test_devision_into_numbers_empty(self):
-        self.assertEqual(devision_into_numbers(''), [])
+    def test_division_into_numbers_empty(self):
+        self.assertEqual(division_into_numbers(''), [])
 
-    def test_devision_into_numbers_H2SiO3(self):
-        self.assertEqual(devision_into_numbers('H2SiO3'), ['2', '3'])
+    def test_division_into_numbers_H2SiO3(self):
+        self.assertEqual(division_into_numbers('H2SiO3'), ['2', '3'])
 
     def test_release_of_acid_redisue_fault(self):
         self.assertEqual(release_of_acid_residue('KOH'), 'Error')
