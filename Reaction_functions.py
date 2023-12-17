@@ -19,8 +19,8 @@ def balance_equation(equation):
     :rtype: str'''
     try:
         elements = equation.split('-->')
-        reagents = devision_into_parts(elements[0])
-        products = devision_into_parts(elements[1])
+        reagents = division_into_parts(elements[0])
+        products = division_into_parts(elements[1])
         separate_elements = []
         unique_elements = []
         ind = 0
@@ -145,7 +145,7 @@ def balance_equation(equation):
         return 'Балансировка не удалась'
 
 
-def devision_into_parts(equation):
+def division_into_parts(equation):
     '''Returns the left input side of equation divided by +
 
     :param equation: left part
@@ -157,8 +157,8 @@ def devision_into_parts(equation):
     return reagents
 
 
-def devision_into_elements(reagent):
-    '''Returns divided formula into elements
+def division_into_elements(reagent):
+    '''Returns formula divided into elements
 
     :param reagent: formula of the substance
     :type reagent: str
@@ -192,7 +192,7 @@ def devision_into_elements(reagent):
     return elements
 
 
-def devision_into_numbers(reagent):
+def division_into_numbers(reagent):
     '''Returns formula indeces
 
     :param reagent: formula of the substance
@@ -215,14 +215,14 @@ def release_of_acid_residue(reagent):
     :rtype: str'''
     a_oxide = ''
     i = 0
-    while (a_oxide not in acid_strengt) and (
-            i < 10) and (a_oxide[:-1] not in acid_strengt):
+    while (a_oxide not in acid_strength) and (
+            i < 10) and (a_oxide[:-1] not in acid_strength):
         reagent = reagent[1:]
         a_oxide = reagent
         i += 1
-    if (a_oxide in acid_strengt):
+    if (a_oxide in acid_strength):
         return a_oxide
-    elif (a_oxide[:-1] in acid_strengt):
+    elif (a_oxide[:-1] in acid_strength):
         return a_oxide[:-1]
     else:
         return ("Error")
@@ -249,7 +249,7 @@ def release_of_metal(reagent):
         return ('Error')
 
 
-def combustion(equation, f=devision_into_parts):
+def combustion(equation, f=division_into_parts):
     '''Returns the combustion reaction of a substance
 
     :param equation: input left part of the reaction
@@ -265,11 +265,11 @@ def combustion(equation, f=devision_into_parts):
                 elem = reagents[1]
                 reagents[1] = reagents[0]
                 reagents[0] = elem
-            elem0 = devision_into_elements(reagents[0])
+            elem0 = division_into_elements(reagents[0])
             if reagents[0] not in exceptions and elem0[1] != 'O':
-                if len(devision_into_elements(reagents[0])) == 2:
-                    elems = devision_into_elements(reagents[0])
-                    elem_in_0 = devision_into_elements(reagents[0])
+                if len(division_into_elements(reagents[0])) == 2:
+                    elems = division_into_elements(reagents[0])
+                    elem_in_0 = division_into_elements(reagents[0])
                     nod_1 = int(gcd(abs(int(oxidation_states.get('O'))), abs(
                         int(oxidation_states.get(elem_in_0[0])))))
                     nod_2 = int(gcd(abs(int(oxidation_states.get('O'))), abs(
@@ -317,7 +317,7 @@ def combustion(equation, f=devision_into_parts):
         return ''
 
 
-def neutralization(equation, f=devision_into_parts):
+def neutralization(equation, f=division_into_parts):
     '''Returns the neutralization reaction between a base and an acid
 
     :param equation: input left part of the reaction
@@ -343,7 +343,7 @@ def neutralization(equation, f=devision_into_parts):
         return ''
 
 
-def substitution(equation, f=devision_into_parts):
+def substitution(equation, f=division_into_parts):
     '''Returns the substitution reaction between metal and acid,  metal and salt, halogene and salt with halogene
 
     :param equation: input left part of the reaction
@@ -359,8 +359,8 @@ def substitution(equation, f=devision_into_parts):
             reagents[1] = reagents[0]
             reagents[0] = elem
         ac_ox = release_of_acid_residue(reagents[1])
-        elem0 = devision_into_elements(reagents[0])
-        elem1 = devision_into_elements(reagents[1])
+        elem0 = division_into_elements(reagents[0])
+        elem1 = division_into_elements(reagents[1])
         if (reagents[0] in Me or reagents[1] in Me) and (
                 'H' in reagents[0] or 'H' in reagents[1]):
             if (metal_activity_series.index(
@@ -411,7 +411,7 @@ def substitution(equation, f=devision_into_parts):
         return ''
 
 
-def compound(equation, f=devision_into_parts):
+def compound(equation, f=division_into_parts):
     '''Returns the compound reaction between two elements, metal and water, base or acid oxides and water
 
     :param equation: input left part of the reaction
@@ -422,8 +422,8 @@ def compound(equation, f=devision_into_parts):
     :rtype: str'''
     try:
         reagents = f(equation)
-        elem0 = devision_into_elements(reagents[0])
-        elem1 = devision_into_elements(reagents[1])
+        elem0 = division_into_elements(reagents[0])
+        elem1 = division_into_elements(reagents[1])
         str_elem0 = ', '.join(elem0)
         str_elem1 = ', '.join(elem1)
         if (str_elem0 in Me) and (str_elem1 in Me) and (
@@ -485,7 +485,7 @@ def compound(equation, f=devision_into_parts):
         return ''
 
 
-def exchange(equation, f=devision_into_parts):
+def exchange(equation, f=division_into_parts):
     '''Returns the exchange reaction between two salts
 
     :param equation: input left part of the reaction
@@ -497,8 +497,8 @@ def exchange(equation, f=devision_into_parts):
     try:
         reagents = f(equation)
         if reagents[0] not in sediment and reagents[1] not in sediment:
-            elem0 = devision_into_elements(reagents[0])
-            elem1 = devision_into_elements(reagents[1])
+            elem0 = division_into_elements(reagents[0])
+            elem1 = division_into_elements(reagents[1])
             a_ox0 = release_of_acid_residue(reagents[0])
             a_ox1 = release_of_acid_residue(reagents[1])
             me0 = release_of_metal(reagents[0])
@@ -536,7 +536,7 @@ def exchange(equation, f=devision_into_parts):
         return ''
 
 
-def hydrolisys(equation, f=devision_into_parts):
+def hydrolisys(equation, f=division_into_parts):
     '''Returns the hydrolisys reaction between water and salt with weak ion
 
     :param equation: input left part of the reaction
