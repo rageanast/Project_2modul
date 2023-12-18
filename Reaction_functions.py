@@ -1,5 +1,3 @@
-import chemlib
-from chemlib import *
 import math
 from math import gcd
 import numpy as np
@@ -141,7 +139,7 @@ def balance_equation(equation):
             balanced_equation += str(abs(int(coefficient))) + \
                 products[index].strip() + ' + '
         return balanced_equation[:-3]
-    except BaseException:
+    except Exception:
         return 'Балансировка не удалась'
 
 
@@ -313,7 +311,7 @@ def combustion(equation, f=division_into_parts):
             else:
                 return ''
         return ''
-    except BaseException:
+    except Exception:
         return ''
 
 
@@ -330,19 +328,28 @@ def neutralization(equation, f=division_into_parts):
         reagents = f(equation)
         if ('OH' in reagents[0] or 'OH' in reagents[1]) and (
                 'H' in reagents[0] or 'H' in reagents[1]):
-            if 'OH' in reagents[0]:
-                reaction = reagents[0] + ' + ' + reagents[1] + ' --> ' + \
-                    reagents[0].replace('OH', reagents[1][1:]) + ' + ' + 'H2O'
-                return balance_equation(reaction), 'обмен'
-            else:
-                reaction = reagents[0] + ' + ' + reagents[1] + ' --> ' + \
-                    reagents[1].replace('OH', reagents[1][1:]) + ' + ' + 'H2O'
-                return balance_equation(reaction), 'обмен'
+            if 'H' in reagents[0]:
+                acid = reagents[1]
+                reagents[1] = reagents[0]
+                reagents[0] = acid
+            me = release_of_metal(reagents[1])
+            ac_ox = release_of_acid_residue(reagents[0])
+            nod = gcd(abs(int(oxidation_states.get(me))), abs(int(acid_oxides_states.get(ac_ox))))
+            k1 = int(abs(int(oxidation_states.get(me))))
+            k2 = int(abs(int(acid_oxides_states.get(ac_ox))))
+            product = me + str(int(k2/nod)) + '(' + ac_ox + ')' + str(int(k1/nod))
+            if (me + '1(' in product) and (')1' in product):
+                product = product.replace('1(', '').replace(')1', '')
+            elif me + '1' in product:
+                product = product.replace('1', '')
+            elif int(acid_oxides_states.get(ac_ox)) != 1 and ')1' in product:
+                product = product.replace('(', '').replace(')1', '')
+            reaction = equation + '-->' + product + ' + ' +  'H2O'
+            print(reaction)
+            return balance_equation(reaction), 'обмен'
         return ''
-    except BaseException:
+    except Exception:
         return ''
-
-
 def substitution(equation, f=division_into_parts):
     '''Returns the substitution reaction between metal and acid,  metal and salt, halogene and salt with halogene
 
@@ -407,7 +414,7 @@ def substitution(equation, f=division_into_parts):
             else:
                 return ''
         return ''
-    except BaseException:
+    except Exception:
         return ''
 
 
@@ -481,7 +488,7 @@ def compound(equation, f=division_into_parts):
                 else:
                     return ''
         return ''
-    except BaseException:
+    except Exception:
         return ''
 
 
@@ -532,7 +539,7 @@ def exchange(equation, f=division_into_parts):
             else:
                 return ''
         return ''
-    except BaseException:
+    except Exception:
         return ''
 
 
@@ -563,5 +570,5 @@ def hydrolisys(equation, f=division_into_parts):
             else:
                 return ''
         return ''
-    except BaseException:
+    except Exception:
         return ''
