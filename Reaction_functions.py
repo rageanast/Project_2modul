@@ -334,22 +334,26 @@ def neutralization(equation, f=division_into_parts):
                 reagents[0] = acid
             me = release_of_metal(reagents[1])
             ac_ox = release_of_acid_residue(reagents[0])
-            nod = gcd(abs(int(oxidation_states.get(me))), abs(int(acid_oxides_states.get(ac_ox))))
+            nod = gcd(abs(int(oxidation_states.get(me))),
+                      abs(int(acid_oxides_states.get(ac_ox))))
             k1 = int(abs(int(oxidation_states.get(me))))
             k2 = int(abs(int(acid_oxides_states.get(ac_ox))))
-            product = me + str(int(k2/nod)) + '(' + ac_ox + ')' + str(int(k1/nod))
+            product = me + str(int(k2 / nod)) + \
+                '(' + ac_ox + ')' + str(int(k1 / nod))
             if (me + '1(' in product) and (')1' in product):
                 product = product.replace('1(', '').replace(')1', '')
             elif me + '1' in product:
                 product = product.replace('1', '')
             elif int(acid_oxides_states.get(ac_ox)) != 1 and ')1' in product:
                 product = product.replace('(', '').replace(')1', '')
-            reaction = equation + '-->' + product + ' + ' +  'H2O'
+            reaction = equation + '-->' + product + ' + ' + 'H2O'
             print(reaction)
             return balance_equation(reaction), 'обмен'
         return ''
     except Exception:
         return ''
+
+
 def substitution(equation, f=division_into_parts):
     '''Returns the substitution reaction between metal and acid,  metal and salt, halogene and salt with halogene
 
