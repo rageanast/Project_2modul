@@ -211,6 +211,7 @@ def release_of_acid_residue(reagent):
     :type reagent: str
     :returns: extract formula of the acid residue from formula
     :rtype: str'''
+    reagent = reagent.replace('(', '').replace(')', '')
     a_oxide = ''
     i = 0
     while (a_oxide not in acid_strength) and (
@@ -224,7 +225,6 @@ def release_of_acid_residue(reagent):
         return a_oxide[:-1]
     else:
         return ("Error")
-
 
 def release_of_metal(reagent):
     '''Returns the metal of a substance
@@ -347,7 +347,6 @@ def neutralization(equation, f=division_into_parts):
             elif int(acid_oxides_states.get(ac_ox)) != 1 and ')1' in product:
                 product = product.replace('(', '').replace(')1', '')
             reaction = equation + '-->' + product + ' + ' + 'H2O'
-            print(reaction)
             return balance_equation(reaction), 'обмен'
         return ''
     except Exception:
@@ -564,15 +563,16 @@ def hydrolisys(equation, f=division_into_parts):
                 reagents[1] = reagents[0]
                 reagents[0] = water
             me = release_of_metal(reagents[0])
-            ac_res = release_of_acid_residue(reagents[0])
-            if (me in strong_ion and ac_res in weak_ion) or (
-                    me in weak_ion and ac_res in strong_ion):
-                reaction = equation + '-->' + \
-                    reagents[0].replace(
-                        ac_res, 'OH') + ' + ' + ox_acid.get(ac_res)
-                return balance_equation(reaction), 'гидролиз'
-            else:
-                return ''
+            ac_ox = release_of_acid_residue(reagents[0])
+            if (me in strong_ion and ac_ox in weak_ion) or (
+                    me in weak_ion and ac_ox in strong_ion):
+                k = int(oxidation_states.get(me))
+                product1 = me + '(' + 'OH' + ')' +  str(k)
+                product2 = ox_acid.get(ac_ox)
+                if ('(' in product1) and (')1' in product1):
+                    product1 = product1.replace('(', '').replace(')1', '')
+            reaction = equation + '-->' + product1 + '+' + product2
+            return balance_equation(reaction), 'гидролиз'
         return ''
     except Exception:
         return ''
