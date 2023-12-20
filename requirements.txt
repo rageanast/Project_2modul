@@ -1,4 +1,3 @@
-NumPy==1.21.6
+numpy==1.21.6
 tkinter==8.6
-SumPy==1.10.1
-math==1.3.0
+sumpy==1.10.1
