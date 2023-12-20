@@ -176,32 +176,10 @@ def division_into_elements(reagent):
             if current_element:
                 elements.append(current_element)
                 current_element = ""
-            j = i + 1
-            coefficient = ""
-            while j < len(reagent) and reagent[j].isdigit():
-                coefficient += reagent[j]
-                j += 1
-            coefficient = int(coefficient) if coefficient else 1
-            if elements:
-                elements[-1] *= coefficient
         i += 1
     if current_element:
         elements.append(current_element)
     return elements
-
-
-def division_into_numbers(reagent):
-    '''Returns formula indeces
-
-    :param reagent: formula of the substance
-    :type reagent: str
-    :returns: extracts indices from formula
-    :rtype: array'''
-    numbers = []
-    for element in reagent:
-        if element.isdigit() and element not in numbers:
-            numbers += element
-    return numbers
 
 
 def release_of_acid_residue(reagent):
