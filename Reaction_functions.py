@@ -204,6 +204,7 @@ def release_of_acid_residue(reagent):
     else:
         return ("Error")
 
+
 def release_of_metal(reagent):
     '''Returns the metal of a substance
 
@@ -545,7 +546,7 @@ def hydrolisys(equation, f=division_into_parts):
             if (me in strong_ion and ac_ox in weak_ion) or (
                     me in weak_ion and ac_ox in strong_ion):
                 k = int(oxidation_states.get(me))
-                product1 = me + '(' + 'OH' + ')' +  str(k)
+                product1 = me + '(' + 'OH' + ')' + str(k)
                 product2 = ox_acid.get(ac_ox)
                 if ('(' in product1) and (')1' in product1):
                     product1 = product1.replace('(', '').replace(')1', '')
